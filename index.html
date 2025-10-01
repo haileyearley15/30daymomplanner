@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mom Planner">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iNDAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KPHA+dGg6cGF0aCBkPSJNMTkgM0g1Yy0xLjEgMC0yIC45LTIgMnYxNGMwIDEuMS45IDIgMiAyaDE0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bS01IDEySDEwdi0yaDR2MnptMC00SDEwVjloNHYyeiIvPgo8L3N2Zz4KPC9zdmc+">
+    <title>30-Day Mom Planner Challenge</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        input, textarea, select {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .date-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .date-input {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .date-input label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .date-input input {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .date-input input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .focus-section {
+            margin-bottom: 30px;
+        }
+
+        .focus-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            transition: border-color 0.3s;
+        }
+
+        .focus-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            border: 2px solid #f0f0f0;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .morning { background: linear-gradient(135deg, #ffeaa7, #fab1a0); }
+        .family { background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
+        .household { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+        .selfcare { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .meals { background: linear-gradient(135deg, #e17055, #f39c12); }
+        .gratitude { background: linear-gradient(135deg, #fd79a8, #e84393); }
+
+        .progress {
+            background: rgba(255,255,255,0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .task-list {
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            flex-direction: column;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background-color: #f8f9ff;
+        }
+
+        .task-main {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .task-input, .dropdown-select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .task-input:focus, .dropdown-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .dropdown-select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .priority-dropdown, .time-dropdown {
+            margin-top: 8px;
+        }
+
+        .meal-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .meal-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .meal-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .meal-input {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .meal-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .gratitude-section {
+            padding: 20px;
+        }
+
+        .gratitude-item {
+            margin-bottom: 15px;
+        }
+
+        .gratitude-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .gratitude-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00b894;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
+
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1001;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        .install-prompt button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .install-prompt .close-btn {
+            background: transparent;
+            color: white;
+            font-size: 18px;
+            padding: 4px;
+            margin-left: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .date-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .meal-section {
+                grid-template-columns: 1fr;
+            }
+
+            .task-item {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="save-indicator" id="saveIndicator">✓ Saved automatically</div>
+    
+    <div class="install-prompt" id="installPrompt">
+        <div>
+            <strong>📱 Add to Home Screen</strong><br>
+            Install this planner as an app for easy daily access!
+        </div>
+        <button onclick="showInstallInstructions()">Install</button>
+        <button class="close-btn" onclick="hideInstallPrompt()">×</button>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>30-Day Mom Planner Challenge ✨</h1>
+            <p>Transform your daily routine with organized planning and mindful living</p>
+        </div>
+
+        <div class="content">
+            <div class="date-section">
+                <div class="date-input">
+                    <label for="todayDate">Today's Date</label>
+                    <input type="date" id="todayDate" onchange="saveData()">
+                </div>
+                <div class="date-input">
+                    <label for="dayNumber">Day ___ of 30</label>
+                    <input type="number" id="dayNumber" min="1" max="30" placeholder="Enter day number" onchange="saveData()">
+                </div>
+            </div>
+
+            <div class="focus-section">
+                <label for="todayFocus" style="display: block; font-weight: 600; margin-bottom: 10px; color: #555;">Today's Focus & Intention:</label>
+                <textarea id="todayFocus" class="focus-input" placeholder="What's your main focus for today? Set your intention..." onchange="saveData()"></textarea>
+            </div>
+
+            <div class="section">
+                <div class="section-header morning">
+                    <span>🌅 MORNING PRIORITIES</span>
+                    <span class="progress" id="morningProgress">0/4 Complete</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="morning" onchange="updateProgress(); saveData()">
+                            <span class="task-text">Review today's schedule and priorities</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="morning" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add your morning priority..." onchange="saveData()">
+                        </div>
+                        <div class="priority-dropdown">
+                            <select class="dropdown-select" onchange="saveData()">
+                                <option value="">Priority Level</option>
+                                <option value="high">🔴 High Priority</option>
+                                <option value="medium">🟡 Medium Priority</option>
+                                <option value="low">🟢 Low Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="morning" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add your morning priority..." onchange="saveData()">
+                        </div>
+                        <div class="time-dropdown">
+                            <select class="dropdown-select" onchange="saveData()">
+                                <option value="">Time Needed</option>
+                                <option value="5min">⏱️ 5 minutes</option>
+                                <option value="15min">⏱️ 15 minutes</option>
+                                <option value="30min">⏱️ 30 minutes</option>
+                                <option value="1hour">⏱️ 1 hour</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="morning" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add your morning priority..." onchange="saveData()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header family">
+                    <span>👨‍👩‍👧‍👦 FAMILY TASKS</span>
+                    <span class="progress" id="familyProgress">0/4 Complete</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="family" onchange="updateProgress(); saveData()">
+                            <span class="task-text">Kids' activities and school coordination</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="family" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add family task..." onchange="saveData()">
+                        </div>
+                        <div class="priority-dropdown">
+                            <select class="dropdown-select" onchange="saveData()">
+                                <option value="">Who's Responsible?</option>
+                                <option value="mom">👩 Mom</option>
+                                <option value="dad">👨 Dad</option>
+                                <option value="kids">👧👦 Kids</option>
+                                <option value="together">👨‍👩‍👧‍👦 Together</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="family" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add family task..." onchange="saveData()">
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="family" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add family task..." onchange="saveData()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header household">
+                    <span>🏠 HOUSEHOLD MANAGEMENT</span>
+                    <span class="progress" id="householdProgress">0/4 Complete</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="household" onchange="updateProgress(); saveData()">
+                            <span class="task-text">Quick tidy-up (15 minutes)</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="household" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add household task..." onchange="saveData()">
+                        </div>
+                        <div class="priority-dropdown">
+                            <select class="dropdown-select" onchange="saveData()">
+                                <option value="">Room/Area</option>
+                                <option value="kitchen">🍽️ Kitchen</option>
+                                <option value="living">🛋️ Living Room</option>
+                                <option value="bedroom">🛏️ Bedrooms</option>
+                                <option value="bathroom">🚿 Bathroom</option>
+                                <option value="laundry">👕 Laundry</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="household" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add household task..." onchange="saveData()">
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="household" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add household task..." onchange="saveData()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header selfcare">
+                    <span>💆‍♀️ SELF-CARE & WELLNESS</span>
+                    <span class="progress" id="selfcareProgress">0/4 Complete</span>
+                </div>
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="selfcare" onchange="updateProgress(); saveData()">
+                            <span class="task-text">10 minutes of mindfulness or meditation</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="selfcare" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add self-care activity..." onchange="saveData()">
+                        </div>
+                        <div class="priority-dropdown">
+                            <select class="dropdown-select" onchange="saveData()">
+                                <option value="">Self-Care Type</option>
+                                <option value="physical">💪 Physical</option>
+                                <option value="mental">🧠 Mental</option>
+                                <option value="emotional">❤️ Emotional</option>
+                                <option value="spiritual">🙏 Spiritual</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="selfcare" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add wellness goal..." onchange="saveData()">
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-main">
+                            <input type="checkbox" class="task-checkbox" data-section="selfcare" onchange="updateProgress(); saveData()">
+                            <input type="text" class="task-input" placeholder="Add personal time..." onchange="saveData()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header meals">
+                    <span>🍽️ MEAL PLANNING</span>
+                    <span class="progress">Plan & Prep</span>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-item">
+                        <label class="meal-label">Breakfast</label>
+                        <input type="text" class="meal-input" placeholder="What's for breakfast?" onchange="saveData()">
+                        <select class="dropdown-select" style="margin-top: 8px;" onchange="saveData()">
+                            <option value="">Prep Level</option>
+                            <option value="quick">⚡ Quick (5 min)</option>
+                            <option value="easy">😊 Easy (15 min)</option>
+                            <option value="prep">👩‍🍳 Needs Prep</option>
+                        </select>
+                    </div>
+                    <div class="meal-item">
+                        <label class="meal-label">Lunch</label>
+                        <input type="text" class="meal-input" placeholder="Lunch plans..." onchange="saveData()">
+                        <select class="dropdown-select" style="margin-top: 8px;" onchange="saveData()">
+                            <option value="">Location</option>
+                            <option value="home">🏠 At Home</option>
+                            <option value="work">💼 At Work</option>
+                            <option value="school">🎒 School Lunch</option>
+                            <option value="out">🍽️ Eating Out</option>
+                        </select>
+                    </div>
+                    <div class="meal-item">
+                        <label class="meal-label">Dinner</label>
+                        <input type="text" class="meal-input" placeholder="Dinner ideas..." onchange="saveData()">
+                        <select class="dropdown-select" style="margin-top: 8px;" onchange="saveData()">
+                            <option value="">Cooking Method</option>
+                            <option value="stovetop">🔥 Stovetop</option>
+                            <option value="oven">🔥 Oven</option>
+                            <option value="crockpot">🍲 Slow Cooker</option>
+                            <option value="grill">🔥 Grill</option>
+                            <option value="takeout">📞 Takeout</option>
+                        </select>
+                    </div>
+                    <div class="meal-item">
+                        <label class="meal-label">Snacks</label>
+                        <input type="text" class="meal-input" placeholder="Healthy snacks..." onchange="saveData()">
+                        <select class="dropdown-select" style="margin-top: 8px;" onchange="saveData()">
+                            <option value="">Snack Type</option>
+                            <option value="fruit">🍎 Fresh Fruit</option>
+                            <option value="protein">🥜 Protein</option>
+                            <option value="veggie">🥕 Veggies</option>
+                            <option value="treat">🍪 Special Treat</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header gratitude">
+                    <span>🙏 DAILY GRATITUDE</span>
+                    <span class="progress">Reflect & Appreciate</span>
+                </div>
+                <div class="gratitude-section">
+                    <div class="gratitude-item">
+                        <label class="meal-label">I'm grateful for...</label>
+                        <input type="text" class="gratitude-input" placeholder="Something that made you smile today" onchange="saveData()">
+                    </div>
+                    <div class="gratitude-item">
+                        <label class="meal-label">Today's win (big or small):</label>
+                        <input type="text" class="gratitude-input" placeholder="Celebrate your accomplishment" onchange="saveData()">
+                    </div>
+                    <div class="gratitude-item">
+                        <label class="meal-label">Tomorrow I want to focus on:</label>
+                        <input type="text" class="gratitude-input" placeholder="Set your intention for tomorrow" onchange="saveData()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateProgress() {
+            const sections = ['morning', 'family', 'household', 'selfcare'];
+            
+            sections.forEach(section => {
+                const checkboxes = document.querySelectorAll(`input[data-section="${section}"]`);
+                const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const total = checkboxes.length;
+                const progressElement = document.getElementById(`${section}Progress`);
+                progressElement.textContent = `${checked}/${total} Complete`;
+            });
+        }
+
+        function saveData() {
+            const data = {};
+            
+            // Save all input values
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach((input, index) => {
+                const key = input.id || `input_${index}`;
+                if (input.type === 'checkbox') {
+                    data[key] = input.checked;
+                } else {
+                    data[key] = input.value;
+                }
+            });
+            
+            // Save to localStorage
+            const today = new Date().toDateString();
+            localStorage.setItem(`momPlanner_${today}`, JSON.stringify(data));
+            
+            // Show save indicator
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        function loadData() {
+            const today = new Date().toDateString();
+            const savedData = localStorage.getItem(`momPlanner_${today}`);
+            
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                // Load all saved values
+                const inputs = document.querySelectorAll('input, textarea, select');
+                inputs.forEach((input, index) => {
+                    const key = input.id || `input_${index}`;
+                    if (data[key] !== undefined) {
+                        if (input.type === 'checkbox') {
+                            input.checked = data[key];
+                        } else {
+                            input.value = data[key];
+                        }
+                    }
+                });
+                
+                updateProgress();
+            }
+            
+            // Set today's date by default
+            const dateInput = document.getElementById('todayDate');
+            if (!dateInput.value) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        function showInstallPrompt() {
+            // Show install prompt after 10 seconds if not dismissed
+            setTimeout(() => {
+                const dismissed = localStorage.getItem('installPromptDismissed');
+                if (!dismissed && window.navigator.standalone !== true) {
+                    document.getElementById('installPrompt').classList.add('show');
+                }
+            }, 10000);
+        }
+
+        function hideInstallPrompt() {
+            document.getElementById('installPrompt').classList.remove('show');
+            localStorage.setItem('installPromptDismissed', 'true');
+        }
+
+        function showInstallInstructions() {
+            if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                alert('📱 To install:\n\n1. Tap the Share button (⬆️) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right\n\nYour planner will appear on your home screen like any other app!');
+            } else {
+                alert('📱 To install:\n\n1. Tap the menu (⋮) in your browser\n2. Look for "Add to Home Screen" or "Install App"\n3. Tap "Add" or "Install"\n\nYour planner will appear on your home screen!');
+            }
+            hideInstallPrompt();
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', () => {
+            loadData();
+            showInstallPrompt();
+        });
+        
+        // Auto-save every 30 seconds
+        setInterval(saveData, 30000);
+
+        // Prevent zoom on input focus (iOS)
+        document.addEventListener('touchstart', function() {}, true);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987da269e07e6c4f',t:'MTc1OTMzOTI2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
